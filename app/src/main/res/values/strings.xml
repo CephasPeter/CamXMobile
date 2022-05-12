@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">CamX</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="flip_camera">Flip Camera</string>
+    <string name="view_saved_files">View Saved Files</string>
+    <string name="light_intensity">Light Intensity</string>
+    <string name="toggle_flashlight">Toggle FlashLight</string>
 </resources>
