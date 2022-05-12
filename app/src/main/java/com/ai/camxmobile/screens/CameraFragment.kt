@@ -1,8 +1,7 @@
-package com.ai.camx.screens
+package com.ai.camxmobile.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.usage.UsageStatsManager
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -23,9 +22,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.ai.camx.R
-import com.ai.camx.databinding.FragmentCameraBinding
-import com.ai.camx.viewmodels.CameraViewModel
+import com.ai.camxmobile.databinding.FragmentCameraBinding
+import com.ai.camxmobile.viewmodels.CameraViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,6 +31,7 @@ import kotlinx.coroutines.launch
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
+import com.ai.camxmobile.R
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
