@@ -75,12 +75,13 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version_"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version_"
 
+    def nav_version = "2.4.0-beta02"
     // Kotlin
-    implementation "androidx.navigation:navigation-fragment-ktx:2.5.0-rc01"
-    implementation "androidx.navigation:navigation-ui-ktx:2.5.0-rc01"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // Feature module Support
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:2.5.0-rc01"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
 
     //GSON
     implementation 'com.google.code.gson:gson:2.8.9'
@@ -108,16 +109,16 @@ dependencies {
     // When using a MDC theme For Compose
     implementation "com.google.android.material:compose-theme-adapter:1.1.9"
 
-    // When using a AppCompat theme For Compose
-    implementation "com.google.accompanist:accompanist-appcompat-theme:0.16.0"
+    // When using a MDC theme
+    implementation "com.google.android.material:compose-theme-adapter:1.1.6"
 
-    //Room For Storing Data
+    //Room
     def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-ktx:2.4.2"
-    testImplementation "androidx.room:room-testing:2.4.2"
+    implementation "androidx.room:room-ktx:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
     implementation 'androidx.room:room-rxjava2:2.4.2'
 
     //Dependency Injection
@@ -130,11 +131,12 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
 
     //Camera X
-    def camerax_version = "1.1.0-rc01"
+    def camerax_version = "1.1.0-beta01"
     implementation "androidx.camera:camera-core:${camerax_version}"
     implementation "androidx.camera:camera-camera2:${camerax_version}"
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
     implementation "androidx.camera:camera-video:${camerax_version}"
+
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-extensions:${camerax_version}"
 }
