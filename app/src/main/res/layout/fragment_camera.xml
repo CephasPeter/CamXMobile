@@ -1,14 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.CameraFragment">
+    tools:context=".MainActivity">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        app:layout_constraintTop_toBottomOf="@id/topPanel"
+        app:layout_constraintBottom_toTopOf="@id/shutterBackground"
+        app:layout_constrainedHeight="true"
+        android:layout_marginBottom="50dp"/>
 
-</FrameLayout>
+    <View
+        android:id="@+id/shutterEffectView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/camEffect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/shutterBackground"
+        android:layout_marginBottom="50dp"
+        app:layout_constrainedHeight="true"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:id="@+id/shutterBackground"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/circular_background"
+        android:layout_marginBottom="50dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/take_picture"
+        />
+
+    <ImageView
+        android:id="@+id/shutterForeground"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="@id/shutterBackground"
+        app:layout_constraintEnd_toEndOf="@id/shutterBackground"
+        app:layout_constraintBottom_toBottomOf="@id/shutterBackground"
+        app:layout_constraintTop_toTopOf="@id/shutterBackground"
+        android:src="@drawable/circular_foreground"
+        app:tint="?colorPrimary"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/take_picture" />
+
+    <ImageView
+        android:id="@+id/flipCamera"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/shutterBackground"
+        app:layout_constraintBottom_toBottomOf="@id/shutterBackground"
+        app:layout_constraintTop_toTopOf="@id/shutterBackground"
+        android:src="@drawable/ic_round_flip_camera_ios_24"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/flip_camera"
+        android:scaleX=".9"
+        android:scaleY=".9"
+        android:elevation="1dp"
+        app:tint="?colorOnPrimary"/>
+
+    <ImageView
+        android:id="@+id/flipCameraBackground"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="@id/flipCamera"
+        app:layout_constraintStart_toStartOf="@id/flipCamera"
+        app:layout_constraintBottom_toBottomOf="@id/flipCamera"
+        app:layout_constraintTop_toTopOf="@id/flipCamera"
+        android:src="@drawable/circular_foreground"
+        app:tint="?colorPrimary"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/view_saved_files"
+        />
+
+    <LinearLayout
+        android:id="@+id/light_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="@id/viewFinder"
+        app:layout_constraintBottom_toBottomOf="@id/viewFinder"
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_rectangle"
+        android:animateLayoutChanges="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="15dp">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_round_light_mode_24"
+            android:scaleY=".7"
+            android:scaleX=".7"
+            android:contentDescription="@string/light_intensity"
+            app:tint="?colorOnPrimary" />
+
+        <TextView
+            android:id="@+id/light"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="10dp"
+            android:maxWidth="100dp"
+            android:maxLines="1"
+            android:text="0"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="5dp"
+            android:textColor="?colorOnPrimary"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/flash_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="@id/viewFinder"
+        app:layout_constraintBottom_toBottomOf="@id/viewFinder"
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_rectangle"
+        android:animateLayoutChanges="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="15dp">
+
+        <ImageView
+            android:id="@+id/flash"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_round_flash_off_24"
+            android:scaleY=".7"
+            android:scaleX=".7"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/toggle_flashlight"
+            app:tint="?colorOnPrimary" />
+
+    </LinearLayout>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/viewSaved"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/shutterBackground"
+        app:layout_constraintBottom_toBottomOf="@id/shutterBackground"
+        app:layout_constraintTop_toTopOf="@id/shutterBackground"
+        app:srcCompat="@drawable/circular_foreground"
+        app:tint="?colorPrimary"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/view_saved_files"
+        app:shapeAppearanceOverlay="@style/circleImageView"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
