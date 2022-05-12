@@ -75,13 +75,12 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version_"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version_"
 
-    def nav_version = "2.4.0-beta02"
     // Kotlin
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.0-rc01"
+    implementation "androidx.navigation:navigation-ui-ktx:2.5.0-rc01"
 
     // Feature module Support
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:2.5.0-rc01"
 
     //GSON
     implementation 'com.google.code.gson:gson:2.8.9'
