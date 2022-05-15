@@ -37,11 +37,6 @@ class ImageDataFragment : Fragment() {
         if(camViewModel.capturedBitmap.value != null){
             binding.capturedImage.setImageBitmap(camViewModel.capturedBitmap.value)
             runLabelDetection(camViewModel.capturedBitmap.value!!)
-            binding.composeView.setContent {
-                MdcTheme { // or AppCompatTheme
-                    Body()
-                }
-            }
         }else{
             findNavController().navigateUp()
         }
@@ -54,7 +49,11 @@ class ImageDataFragment : Fragment() {
         labeler.process(image)
             .addOnSuccessListener { labels ->
                 labelList.addAll(labels)
-                Log.e("Length",labels.size.toString())
+                binding.composeView.setContent {
+                    MdcTheme { // or AppCompatTheme
+                        Body()
+                    }
+                }
             }
             .addOnFailureListener { e ->
 
