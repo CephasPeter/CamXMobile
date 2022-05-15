@@ -11,9 +11,11 @@ import com.ai.camxmobile.R
 import com.ai.camxmobile.databinding.FragmentCameraBinding
 import com.ai.camxmobile.databinding.FragmentImageDataBinding
 import com.ai.camxmobile.viewmodels.CameraViewModel
+import com.bumptech.glide.Glide
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
+import java.io.File
 
 class ImageDataFragment : Fragment() {
     private lateinit var binding: FragmentImageDataBinding
@@ -27,7 +29,9 @@ class ImageDataFragment : Fragment() {
     }
 
     private fun setUpUI(){
-
+        Glide.with(requireActivity())
+            .load(File(camViewModel.capturedUri.value!!.path!!))
+            .into(binding.capturedImage);
     }
 
     private fun runLabelDetection(bitmap: Bitmap) {
