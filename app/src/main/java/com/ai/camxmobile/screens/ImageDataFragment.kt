@@ -1,5 +1,6 @@
 package com.ai.camxmobile.screens
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,9 @@ import com.ai.camxmobile.R
 import com.ai.camxmobile.databinding.FragmentCameraBinding
 import com.ai.camxmobile.databinding.FragmentImageDataBinding
 import com.ai.camxmobile.viewmodels.CameraViewModel
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 
 class ImageDataFragment : Fragment() {
     private lateinit var binding: FragmentImageDataBinding
@@ -18,5 +22,19 @@ class ImageDataFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentImageDataBinding.inflate(inflater,container,false)
         return binding.root
+    }
+
+    private fun runLabelDetection(bitmap: Bitmap) {
+        val image = InputImage.fromBitmap(bitmap, 0)
+        val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
+        labeler.process(image)
+            .addOnSuccessListener { labels ->
+                labels.forEachIndexed { index, imageLabel ->
+
+                }
+            }
+            .addOnFailureListener { e ->
+
+            }
     }
 }

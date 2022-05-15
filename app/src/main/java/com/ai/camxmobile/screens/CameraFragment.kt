@@ -136,7 +136,9 @@ class CameraFragment : Fragment() {
                     } else {
                         MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
                     }
+
                     camViewModel.capturedBitmap.value = bitmap
+                    camViewModel.capturedUri.value = imageUri
                     runLabelDetection(bitmap)
                 }
             }
@@ -325,7 +327,7 @@ class CameraFragment : Fragment() {
         labeler.process(image)
             .addOnSuccessListener { labels ->
                 labels.forEachIndexed { index, imageLabel ->
-                    Log.i("Object Name",imageLabel!!.text)
+
                 }
             }
             .addOnFailureListener { e ->
