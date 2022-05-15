@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.ai.camxmobile.R
 import com.ai.camxmobile.databinding.FragmentCameraBinding
@@ -23,14 +24,13 @@ class ImageDataFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentImageDataBinding.inflate(inflater,container,false)
+        setUpUI()
         return binding.root
     }
 
     private fun setUpUI(){
-        if(camViewModel.capturedUri.value != null){
-            Glide.with(requireActivity())
-                .load(File(camViewModel.capturedUri.value!!.path!!))
-                .into(binding.capturedImage);
+        if(camViewModel.capturedBitmap.value != null){
+            binding.capturedImage.setImageBitmap(camViewModel.capturedBitmap.value)
         }
     }
 
