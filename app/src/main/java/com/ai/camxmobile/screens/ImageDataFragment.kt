@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -70,13 +72,23 @@ class ImageDataFragment : Fragment() {
 
     @Composable
     private fun Body(){
-
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth(),
+        ){
+            items(
+                items = labelList,
+                itemContent = {
+                   Item(it,labelList.indexOf(it)+1)
+                }
+            )
+        }
     }
 
     @Composable
     private fun Item(imageLabel: ImageLabel, pos : Int){
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(bottom = 10.dp),
         ){
             Row(modifier = Modifier) {
                 Text(
@@ -89,30 +101,36 @@ class ImageDataFragment : Fragment() {
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     fontWeight = FontWeight.W500,
+                    color = MaterialTheme.colors.primary
                 )
 
-                Text(
-                    text = "Entity: "+imageLabel.text.toString(),
-                    style = MaterialTheme.typography.subtitle1,
-                    modifier = Modifier.wrapContentHeight().wrapContentWidth(),
-                    softWrap = false,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    fontWeight = FontWeight.W500,
-                )
+                Column(modifier = Modifier) {
+                    Text(
+                        text = imageLabel.text.toString(),
+                        style = MaterialTheme.typography.subtitle1,
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .wrapContentWidth(),
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        fontWeight = FontWeight.W500,
+                        color = MaterialTheme.colors.primary
+                    )
+
+                    Text(
+                        text = "Confidence: "+imageLabel.confidence.toString(),
+                        style = MaterialTheme.typography.subtitle2,
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .wrapContentWidth(),
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        fontWeight = FontWeight.W500,
+                    )
+                }
             }
-            Text(
-                text = "Confidence: "+imageLabel.confidence.toString(),
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier
-                    .padding(start = 25.dp)
-                    .wrapContentHeight()
-                    .wrapContentWidth(),
-                softWrap = false,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                fontWeight = FontWeight.W500,
-            )
         }
     }
 }
