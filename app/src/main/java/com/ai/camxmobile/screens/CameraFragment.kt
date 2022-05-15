@@ -36,6 +36,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.io.IOException
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
@@ -135,7 +136,6 @@ class CameraFragment : Fragment() {
                     } else {
                         MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
                     }
-
                     runObjectDetection(bitmap)
                 }
             }
@@ -296,6 +296,29 @@ class CameraFragment : Fragment() {
     }
 
     private fun runObjectDetection(bitmap: Bitmap) {
+        val image = InputImage.fromBitmap(bitmap, 0)
+
+        val options = ObjectDetectorOptions.Builder()
+            .setDetectorMode(ObjectDetectorOptions.SINGLE_IMAGE_MODE)
+            .enableMultipleObjects()
+            .enableClassification()
+            .build()
+
+        val objectDetector = ObjectDetection.getClient(options)
+        objectDetector.process(image)
+            .addOnSuccessListener {
+                // Task completed successfully
+                if(it.isNotEmpty()){
+                    debugPrint(it)
+                }
+            }
+            .addOnFailureListener {
+                // Task failed with an exception
+                Log.e(TAG, it.message.toString())
+            }
+    }
+
+    private fun runLabelDetection(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
 
         val options = ObjectDetectorOptions.Builder()
