@@ -14,6 +14,7 @@
         app:titleCentered="true"
         app:titleTextAppearance="?textAppearanceTitleMedium"
         app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_round_arrow_back_24"
         />
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -35,6 +36,7 @@
         android:textAlignment="center"
         android:textAppearance="?textAppearanceTitleMedium"
         android:textColor="?colorPrimary"
+        android:layout_marginTop="10dp"
         />
 
     <androidx.compose.ui.platform.ComposeView
