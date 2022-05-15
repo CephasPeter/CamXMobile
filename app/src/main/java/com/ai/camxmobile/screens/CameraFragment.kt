@@ -29,6 +29,8 @@ import com.ai.camxmobile.R
 import com.ai.camxmobile.databinding.FragmentCameraBinding
 import com.ai.camxmobile.viewmodels.CameraViewModel
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import com.google.mlkit.vision.objects.DetectedObject
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
@@ -36,7 +38,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.io.IOException
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
@@ -320,24 +321,13 @@ class CameraFragment : Fragment() {
 
     private fun runLabelDetection(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
+        val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
+        labeler.process(image)
+            .addOnSuccessListener { labels ->
 
-        val options = ObjectDetectorOptions.Builder()
-            .setDetectorMode(ObjectDetectorOptions.SINGLE_IMAGE_MODE)
-            .enableMultipleObjects()
-            .enableClassification()
-            .build()
-
-        val objectDetector = ObjectDetection.getClient(options)
-        objectDetector.process(image)
-            .addOnSuccessListener {
-                // Task completed successfully
-                if(it.isNotEmpty()){
-                    debugPrint(it)
-                }
             }
-            .addOnFailureListener {
-                // Task failed with an exception
-                Log.e(TAG, it.message.toString())
+            .addOnFailureListener { e ->
+
             }
     }
 
