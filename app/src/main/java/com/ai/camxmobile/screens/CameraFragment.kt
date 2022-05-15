@@ -29,6 +29,7 @@ import com.ai.camxmobile.R
 import com.ai.camxmobile.databinding.FragmentCameraBinding
 import com.ai.camxmobile.viewmodels.CameraViewModel
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.objects.DetectedObject
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
 import kotlinx.coroutines.CoroutineScope
@@ -134,6 +135,8 @@ class CameraFragment : Fragment() {
                     } else {
                         MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
                     }
+
+
                 }
             }
         })
@@ -306,12 +309,26 @@ class CameraFragment : Fragment() {
             .addOnSuccessListener {
                 // Task completed successfully
                 if(it.isNotEmpty()){
-                    Log.i("Object",it[0].boundingBox.toString())
+                    debugPrint(it)
                 }
             }
             .addOnFailureListener {
                 // Task failed with an exception
                 Log.e(TAG, it.message.toString())
             }
+    }
+
+    private fun debugPrint(detectedObjects: List<DetectedObject>) {
+        detectedObjects.forEachIndexed { index, detectedObject ->
+            val box = detectedObject.boundingBox
+
+            Log.d(TAG, "Detected object: $index")
+            Log.d(TAG, " trackingId: ${detectedObject.trackingId}")
+            Log.d(TAG, " boundingBox: (${box.left}, ${box.top}) - (${box.right},${box.bottom})")
+            detectedObject.labels.forEach {
+                Log.d(TAG, " categories: ${it.text}")
+                Log.d(TAG, " confidence: ${it.confidence}")
+            }
+        }
     }
 }
