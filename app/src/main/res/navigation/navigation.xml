@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation.xml"
     app:startDestination="@id/cameraFragment">
 
     <fragment
         android:id="@+id/cameraFragment"
         android:name="com.ai.camxmobile.screens.CameraFragment"
-        android:label="CameraFragment" />
+        android:label="CameraFragment" >
+        <action
+            android:id="@+id/action_cameraFragment_to_imageDataFragment"
+            app:destination="@id/imageDataFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/imageDataFragment"
+        android:name="com.ai.camxmobile.screens.ImageDataFragment"
+        android:label="fragment_image_data"
+        tools:layout="@layout/fragment_image_data" />
 
 </navigation>
