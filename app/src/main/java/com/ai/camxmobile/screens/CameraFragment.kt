@@ -325,7 +325,7 @@ class CameraFragment : Fragment() {
         labeler.process(image)
             .addOnSuccessListener { labels ->
                 labels.forEachIndexed { index, imageLabel ->
-
+                    Log.i("Object Name",imageLabel!!.text)
                 }
             }
             .addOnFailureListener { e ->
