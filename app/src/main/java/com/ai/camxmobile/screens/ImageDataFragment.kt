@@ -15,6 +15,7 @@ import com.ai.camxmobile.databinding.FragmentImageDataBinding
 import com.ai.camxmobile.viewmodels.CameraViewModel
 import com.bumptech.glide.Glide
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabel
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import java.io.File
@@ -37,6 +38,7 @@ class ImageDataFragment : Fragment() {
         }
     }
 
+    private var labelList : ArrayList<ImageLabel>()
     private fun runLabelDetection(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
         val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
