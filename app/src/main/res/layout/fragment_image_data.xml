@@ -26,11 +26,22 @@
         android:scaleType="centerCrop"
         />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/capturedImage"
+        android:text="@string/present_entities_in_picture"
+        android:textAlignment="center"
+        android:textAppearance="?textAppearanceTitleMedium"
+        android:textColor="?colorPrimary"
+        />
+
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/capturedImage"
+        app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constrainedHeight="true"
         android:layout_margin="10dp" />
