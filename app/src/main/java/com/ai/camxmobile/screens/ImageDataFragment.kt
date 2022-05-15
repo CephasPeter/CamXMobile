@@ -70,12 +70,17 @@ class ImageDataFragment : Fragment() {
 
     @Composable
     private fun Body(){
+
+    }
+
+    @Composable
+    private fun Item(imageLabel: ImageLabel, pos : Int){
         Column(
             modifier = Modifier.fillMaxSize(),
         ){
             Row(modifier = Modifier) {
                 Text(
-                    text = "1 - ",
+                    text = pos.toString().plus(" - "),
                     style = MaterialTheme.typography.subtitle1,
                     modifier = Modifier
                         .wrapContentHeight()
@@ -87,11 +92,9 @@ class ImageDataFragment : Fragment() {
                 )
 
                 Text(
-                    text = "Entity errorString!!",
+                    text = "Entity: "+imageLabel.text.toString(),
                     style = MaterialTheme.typography.subtitle1,
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .wrapContentWidth(),
+                    modifier = Modifier.wrapContentHeight().wrapContentWidth(),
                     softWrap = false,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
@@ -99,7 +102,7 @@ class ImageDataFragment : Fragment() {
                 )
             }
             Text(
-                text = "Confidence Level",
+                text = "Confidence: "+imageLabel.confidence.toString(),
                 style = MaterialTheme.typography.subtitle2,
                 modifier = Modifier
                     .padding(start = 25.dp)
@@ -111,10 +114,5 @@ class ImageDataFragment : Fragment() {
                 fontWeight = FontWeight.W500,
             )
         }
-    }
-
-    @Composable
-    private fun Item(imageLabel: ImageLabel, pos : Int){
-
     }
 }
