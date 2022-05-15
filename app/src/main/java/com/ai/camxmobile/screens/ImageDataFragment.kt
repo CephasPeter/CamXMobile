@@ -45,9 +45,7 @@ class ImageDataFragment : Fragment() {
         val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
         labeler.process(image)
             .addOnSuccessListener { labels ->
-                labels.forEachIndexed { index, imageLabel ->
-
-                }
+                labelList.addAll(labels)
             }
             .addOnFailureListener { e ->
 
