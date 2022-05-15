@@ -169,7 +169,7 @@ class CameraFragment : Fragment() {
                         mainScope.launch {
                             binding.light.text = luma.toInt().toString()
                         }
-                        Log.d(TAG, "Average luminosity: $luma")
+                        //Log.d(TAG, "Average luminosity: $luma")
                     })
                 }
 
