@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -16,6 +17,7 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.Recorder
@@ -101,7 +103,28 @@ class CameraFragment : Fragment() {
             }
         }
 
+        binding.choosePicture.setOnClickListener {
+            selectImageFromGalleryResult.launch("image/*")
+        }
+
         return binding.root
+    }
+
+    private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            val imageUri: Uri = it
+
+            val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, imageUri))
+            } else {
+                MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
+            }
+
+            camViewModel.capturedBitmap.value = bitmap
+
+            val action = CameraFragmentDirections.actionCameraFragmentToImageDataFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun takePhoto() {
@@ -139,10 +162,8 @@ class CameraFragment : Fragment() {
                     }
 
                     camViewModel.capturedBitmap.value = bitmap
-                   // camViewModel.capturedUri.value = imageUri
 
                     val action = CameraFragmentDirections.actionCameraFragmentToImageDataFragment()
-                    //runLabelDetection(bitmap)
                     findNavController().navigate(action)
                 }
             }

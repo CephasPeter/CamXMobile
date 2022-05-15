@@ -47,6 +47,9 @@ class ImageDataFragment : Fragment() {
         if(camViewModel.capturedBitmap.value != null){
             binding.capturedImage.setImageBitmap(camViewModel.capturedBitmap.value)
             runLabelDetection(camViewModel.capturedBitmap.value!!)
+            binding.toolBar.setNavigationOnClickListener {
+                findNavController().navigateUp()
+            }
         }else{
             findNavController().navigateUp()
         }
