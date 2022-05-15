@@ -33,6 +33,7 @@ class ImageDataFragment : Fragment() {
     private fun setUpUI(){
         if(camViewModel.capturedBitmap.value != null){
             binding.capturedImage.setImageBitmap(camViewModel.capturedBitmap.value)
+            runLabelDetection(camViewModel.capturedBitmap.value!!)
         }else{
             findNavController().navigateUp()
         }
