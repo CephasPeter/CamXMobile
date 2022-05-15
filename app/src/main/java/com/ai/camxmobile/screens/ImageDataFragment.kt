@@ -2,11 +2,13 @@ package com.ai.camxmobile.screens
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.ai.camxmobile.R
@@ -14,6 +16,7 @@ import com.ai.camxmobile.databinding.FragmentCameraBinding
 import com.ai.camxmobile.databinding.FragmentImageDataBinding
 import com.ai.camxmobile.viewmodels.CameraViewModel
 import com.bumptech.glide.Glide
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabel
 import com.google.mlkit.vision.label.ImageLabeling
@@ -34,6 +37,11 @@ class ImageDataFragment : Fragment() {
         if(camViewModel.capturedBitmap.value != null){
             binding.capturedImage.setImageBitmap(camViewModel.capturedBitmap.value)
             runLabelDetection(camViewModel.capturedBitmap.value!!)
+            binding.composeView.setContent {
+                MdcTheme { // or AppCompatTheme
+                    Body()
+                }
+            }
         }else{
             findNavController().navigateUp()
         }
@@ -46,9 +54,15 @@ class ImageDataFragment : Fragment() {
         labeler.process(image)
             .addOnSuccessListener { labels ->
                 labelList.addAll(labels)
+                Log.e("Length",labels.size.toString())
             }
             .addOnFailureListener { e ->
 
             }
+    }
+
+    @Composable
+    private fun Body(){
+
     }
 }
