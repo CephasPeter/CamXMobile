@@ -29,9 +29,11 @@ class ImageDataFragment : Fragment() {
     }
 
     private fun setUpUI(){
-        Glide.with(requireActivity())
-            .load(File(camViewModel.capturedUri.value!!.path!!))
-            .into(binding.capturedImage);
+        if(camViewModel.capturedUri.value != null){
+            Glide.with(requireActivity())
+                .load(File(camViewModel.capturedUri.value!!.path!!))
+                .into(binding.capturedImage);
+        }
     }
 
     private fun runLabelDetection(bitmap: Bitmap) {
