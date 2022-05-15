@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.*
 import android.provider.MediaStore
 import android.util.Log
@@ -32,9 +33,11 @@ import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 import com.ai.camxmobile.R
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.objects.ObjectDetection
+import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
 
 typealias LumaListener = (luma: Double) -> Unit
 
@@ -275,5 +278,28 @@ class CameraFragment : Fragment() {
 
             image.close()
         }
+    }
+
+    private fun runObjectDetection(bitmap: Bitmap) {
+        val image = InputImage.fromBitmap(bitmap, 0)
+
+        val options = ObjectDetectorOptions.Builder()
+            .setDetectorMode(ObjectDetectorOptions.SINGLE_IMAGE_MODE)
+            .enableMultipleObjects()
+            .enableClassification()
+            .build()
+
+        val objectDetector = ObjectDetection.getClient(options)
+        objectDetector.process(image)
+            .addOnSuccessListener {
+                // Task completed successfully
+                if(it.isNotEmpty()){
+                    Log.i("Object",it[0].boundingBox.toString())
+                }
+            }
+            .addOnFailureListener {
+                // Task failed with an exception
+                Log.e(TAG, it.message.toString())
+            }
     }
 }
