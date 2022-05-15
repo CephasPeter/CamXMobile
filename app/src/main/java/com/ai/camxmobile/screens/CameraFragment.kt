@@ -120,7 +120,7 @@ class CameraFragment : Fragment() {
 
         imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(requireActivity()), object : ImageCapture.OnImageSavedCallback {
             override fun onError(exc: ImageCaptureException) {
-                Toast.makeText(requireContext(),"An Error Occurred",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),"Unable To Take Photo",Toast.LENGTH_SHORT).show()
                 binding.shutterForeground.visibility = View.VISIBLE
                 binding.shutterEffectView.visibility = View.GONE
             }
@@ -136,7 +136,7 @@ class CameraFragment : Fragment() {
                     } else {
                         MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
                     }
-                    //runObjectDetection(bitmap)
+                    camViewModel.capturedBitmap.value = bitmap
                     runLabelDetection(bitmap)
                 }
             }
