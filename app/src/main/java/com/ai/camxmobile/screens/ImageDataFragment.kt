@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.ai.camxmobile.R
 import com.ai.camxmobile.databinding.FragmentCameraBinding
 import com.ai.camxmobile.databinding.FragmentImageDataBinding
@@ -31,6 +32,8 @@ class ImageDataFragment : Fragment() {
     private fun setUpUI(){
         if(camViewModel.capturedBitmap.value != null){
             binding.capturedImage.setImageBitmap(camViewModel.capturedBitmap.value)
+        }else{
+            findNavController().navigateUp()
         }
     }
 
