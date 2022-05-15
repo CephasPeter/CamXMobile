@@ -142,4 +142,6 @@ dependencies {
 
     //ML Kit For Object Detection
     implementation 'com.google.mlkit:object-detection:17.0.0'
+    //ML Kit For Image Labelling
+    implementation 'com.google.mlkit:image-labeling:17.0.7'
 }
