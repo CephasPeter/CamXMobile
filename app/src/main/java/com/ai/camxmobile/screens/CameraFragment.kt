@@ -139,7 +139,7 @@ class CameraFragment : Fragment() {
                     }
 
                     camViewModel.capturedBitmap.value = bitmap
-                    camViewModel.capturedUri.value = imageUri
+                   // camViewModel.capturedUri.value = imageUri
 
                     val action = CameraFragmentDirections.actionCameraFragmentToImageDataFragment()
                     //runLabelDetection(bitmap)
