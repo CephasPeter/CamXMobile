@@ -39,7 +39,7 @@ class ImageDataFragment : Fragment() {
         }
     }
 
-    private var labelList : ArrayList<ImageLabel>()
+    private var labelList  = ArrayList<ImageLabel>()
     private fun runLabelDetection(bitmap: Bitmap) {
         val image = InputImage.fromBitmap(bitmap, 0)
         val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
