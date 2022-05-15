@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.ai.camxmobile.R
 import com.ai.camxmobile.databinding.FragmentCameraBinding
 import com.ai.camxmobile.viewmodels.CameraViewModel
@@ -139,7 +140,10 @@ class CameraFragment : Fragment() {
 
                     camViewModel.capturedBitmap.value = bitmap
                     camViewModel.capturedUri.value = imageUri
-                    runLabelDetection(bitmap)
+
+                    val action = CameraFragmentDirections.actionCameraFragmentToImageDataFragment()
+                    //runLabelDetection(bitmap)
+                    findNavController().navigate(action)
                 }
             }
         })
