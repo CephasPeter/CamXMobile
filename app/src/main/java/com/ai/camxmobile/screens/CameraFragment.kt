@@ -137,7 +137,8 @@ class CameraFragment : Fragment() {
                     } else {
                         MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
                     }
-                    runObjectDetection(bitmap)
+                    //runObjectDetection(bitmap)
+                    runLabelDetection(bitmap)
                 }
             }
         })
