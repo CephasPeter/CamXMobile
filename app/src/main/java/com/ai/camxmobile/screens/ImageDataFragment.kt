@@ -8,7 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.ai.camxmobile.R
@@ -50,7 +58,7 @@ class ImageDataFragment : Fragment() {
             .addOnSuccessListener { labels ->
                 labelList.addAll(labels)
                 binding.composeView.setContent {
-                    MdcTheme { // or AppCompatTheme
+                    MdcTheme {
                         Body()
                     }
                 }
@@ -62,6 +70,51 @@ class ImageDataFragment : Fragment() {
 
     @Composable
     private fun Body(){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+        ){
+            Row(modifier = Modifier) {
+                Text(
+                    text = "1 - ",
+                    style = MaterialTheme.typography.subtitle1,
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .wrapContentWidth(),
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    fontWeight = FontWeight.W500,
+                )
+
+                Text(
+                    text = "Entity errorString!!",
+                    style = MaterialTheme.typography.subtitle1,
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .wrapContentWidth(),
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    fontWeight = FontWeight.W500,
+                )
+            }
+            Text(
+                text = "Confidence Level",
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier
+                    .padding(start = 25.dp)
+                    .wrapContentHeight()
+                    .wrapContentWidth(),
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                fontWeight = FontWeight.W500,
+            )
+        }
+    }
+
+    @Composable
+    private fun Item(imageLabel: ImageLabel, pos : Int){
 
     }
 }
