@@ -8,4 +8,5 @@
     <string name="light_intensity">Light Intensity</string>
     <string name="toggle_flashlight">Toggle FlashLight</string>
     <string name="present_entities_in_picture">Entities Present In Above Picture</string>
+    <string name="percent">percent</string>
 </resources>

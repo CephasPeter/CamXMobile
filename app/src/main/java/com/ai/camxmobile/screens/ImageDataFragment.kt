@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,7 @@ import com.google.mlkit.vision.label.ImageLabel
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import java.io.File
+import kotlin.math.roundToInt
 
 class ImageDataFragment : Fragment() {
     private lateinit var binding: FragmentImageDataBinding
@@ -122,7 +124,7 @@ class ImageDataFragment : Fragment() {
                     )
 
                     Text(
-                        text = "Confidence: "+imageLabel.confidence.toString(),
+                        text = "Confidence: "+(imageLabel.confidence * 100).roundToInt().toString().plus(" ").plus(stringResource(R.string.percent)),
                         style = MaterialTheme.typography.subtitle2,
                         modifier = Modifier
                             .wrapContentHeight()
