@@ -24,6 +24,7 @@ class CameraViewModel @Inject constructor(private val itemDetailRepo: ItemDetail
 
     var capturedBitmap = MutableLiveData<Bitmap>()
     var capturedUri = MutableLiveData<Uri>()
+    var capturedName = MutableLiveData<String>()
 
     private val _id = MutableLiveData<Long>()
     val id : LiveData<Long> =  _id

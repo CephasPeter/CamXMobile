@@ -25,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import com.ai.camxmobile.R
 import com.ai.camxmobile.databinding.FragmentCameraBinding
 import com.ai.camxmobile.databinding.FragmentImageDataBinding
+import com.ai.camxmobile.models.ItemModel
 import com.ai.camxmobile.viewmodels.CameraViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.composethemeadapter.MdcTheme
@@ -34,6 +35,8 @@ import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -70,6 +73,12 @@ class ImageDataFragment : Fragment() {
                     MdcTheme {
                         Body()
                     }
+                }
+
+                var itemModel = ItemModel(UUID.randomUUID().toString()).apply {
+                    createdDate = System.currentTimeMillis()
+                    imageLabel = labelList
+                    uri = camViewModel.capturedUri.toString()
                 }
             }
             .addOnFailureListener { e ->

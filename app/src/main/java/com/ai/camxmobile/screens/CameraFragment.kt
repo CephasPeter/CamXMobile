@@ -4,13 +4,14 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ScaleGestureDetector
@@ -47,6 +48,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
 
 typealias LumaListener = (luma: Double) -> Unit
 
@@ -133,7 +135,7 @@ class CameraFragment : Fragment() {
         val imageCapture = imageCapture ?: return
 
         // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault()).format(System.currentTimeMillis())
+        val name = "CAMX-"+System.currentTimeMillis().toString()
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
@@ -164,6 +166,8 @@ class CameraFragment : Fragment() {
                     }
 
                     camViewModel.capturedBitmap.value = bitmap
+                    camViewModel.capturedUri.value = imageUri
+                    camViewModel.capturedName.value = getFileName(imageUri)
 
                     val action = CameraFragmentDirections.actionCameraFragmentToImageDataFragment()
                     findNavController().navigate(action)
@@ -265,10 +269,6 @@ class CameraFragment : Fragment() {
                 return@setOnTouchListener true
             }
         }, ContextCompat.getMainExecutor(requireActivity()))
-    }
-
-    private fun requestPermission(){
-
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -374,5 +374,26 @@ class CameraFragment : Fragment() {
                 Log.d(TAG, " confidence: ${it.confidence}")
             }
         }
+    }
+
+    @SuppressLint("Range")
+    fun getFileName(uri: Uri): String? {
+        var result: String? = null
+        if (uri.scheme == "content") {
+            val cursor: Cursor? = requireActivity().contentResolver.query(uri, null, null, null, null)
+            cursor.use { cursor ->
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.path
+            val cut = result!!.lastIndexOf('/')
+            if (cut != -1) {
+                result = result!!.substring(cut + 1)
+            }
+        }
+        return result
     }
 }
