@@ -75,11 +75,14 @@ class ImageDataFragment : Fragment() {
                     }
                 }
 
-                var itemModel = ItemModel(UUID.randomUUID().toString()).apply {
+                val itemModel = ItemModel(UUID.randomUUID().toString()).apply {
                     createdDate = System.currentTimeMillis()
                     imageLabel = labelList
                     uri = camViewModel.capturedUri.toString()
+                    name = camViewModel.capturedName.toString()
                 }
+
+                camViewModel.insertRoomData(itemModel)
             }
             .addOnFailureListener { e ->
 
