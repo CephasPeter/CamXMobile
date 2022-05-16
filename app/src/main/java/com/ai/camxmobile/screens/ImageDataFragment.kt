@@ -82,7 +82,9 @@ class ImageDataFragment : Fragment() {
                     name = camViewModel.capturedName.value.toString()
                 }
 
-                camViewModel.insertRoomData(itemModel)
+                if(!camViewModel.dataExist(itemModel.id)){
+                    camViewModel.insertRoomData(itemModel)
+                }
             }
             .addOnFailureListener { e ->
                 e.printStackTrace()

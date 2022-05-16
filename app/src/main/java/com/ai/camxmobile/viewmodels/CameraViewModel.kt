@@ -56,4 +56,12 @@ class CameraViewModel @Inject constructor(private val itemDetailRepo: ItemDetail
             itemDetailRepo.deleteItemModel(itemModel)
         }
     }
+
+    fun dataExist(id: String):Boolean{
+        var exists = false
+        viewModelScope.launch(Dispatchers.IO) {
+            exists = itemDetailRepo.exists(id)
+        }
+        return exists
+    }
 }

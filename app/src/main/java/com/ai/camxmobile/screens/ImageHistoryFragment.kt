@@ -1,5 +1,7 @@
 package com.ai.camxmobile.screens
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -10,6 +12,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.collection.ArrayMap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,6 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.ai.camxmobile.databinding.FragmentImageHistoryBinding
 import com.ai.camxmobile.models.ItemModel
@@ -58,27 +62,50 @@ class ImageHistoryFragment : Fragment() {
     }
 
     private var labelList  = ArrayList<ItemModel>()
+    private var bitmapMap  = ArrayMap<String, Bitmap>()
     private fun setUpUI(){
         binding.toolBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
-        camViewModel.itemList.observe(requireActivity()) {
-            if(it.isNotEmpty()){
-                ioScope.launch {
-                    labelList.clear()
-                    labelList.addAll(it)
-                    mainScope.launch {
-                        binding.composeView.setContent {
-                            MdcTheme {
-                                Body()
+        if(labelList.isEmpty()){
+            val observer: Observer<ArrayList<ItemModel>> = object : Observer<ArrayList<ItemModel>> {
+                override fun onChanged(it: ArrayList<ItemModel>) {
+                    if(it.isNotEmpty()){
+                        ioScope.launch {
+                            labelList.clear()
+                            //labelList.addAll(it)
+                            it.forEach { item ->
+                                labelList.add(item)
+                                val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, Uri.parse(item.uri)))
+                                } else {
+                                    MediaStore.Images.Media.getBitmap(requireContext().contentResolver, Uri.parse(item.uri))
+                                }
+                                bitmapMap[item.id] = bitmap
+                            }
+                            mainScope.launch {
+                                binding.composeView.setContent {
+                                    MdcTheme {
+                                        Body()
+                                    }
+                                }
                             }
                         }
                     }
+                    camViewModel.itemList.removeObserver(this)
+                }
+            }
+
+            camViewModel.itemList.observe(requireActivity(),observer)
+            camViewModel.getAllStoredData()
+        }else{
+            binding.composeView.setContent {
+                MdcTheme {
+                    Body()
                 }
             }
         }
-        camViewModel.getAllStoredData()
     }
 
     @Composable
@@ -89,6 +116,9 @@ class ImageHistoryFragment : Fragment() {
         ){
             items(
                 items = labelList,
+                key = {
+                    it.id
+                },
                 itemContent = {
                     Item(it,labelList.indexOf(it)+1)
                 }
@@ -98,17 +128,11 @@ class ImageHistoryFragment : Fragment() {
 
     @Composable
     private fun Item(item: ItemModel, pos : Int){
-        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, Uri.parse(item.uri)))
-        } else {
-            MediaStore.Images.Media.getBitmap(requireContext().contentResolver, Uri.parse(item.uri))
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = 20.dp, start = 10.dp, end = 10.dp).clickable {
-                    camViewModel.capturedBitmap.value = bitmap
+                    camViewModel.capturedBitmap.value = bitmapMap[item.id]!!
                     camViewModel.capturedUri.value = Uri.parse(item.uri)
                     camViewModel.capturedName.value = item.name.toString()
                     
@@ -131,9 +155,9 @@ class ImageHistoryFragment : Fragment() {
                 )
 
                 Image(
-                    bitmap = bitmap.asImageBitmap(),
+                    bitmap = bitmapMap[item.id]!!.asImageBitmap(),
                     contentDescription = "",
-                    modifier = Modifier.height(60.dp).width(60.dp).padding(end = 5.dp).clip(
+                    modifier = Modifier.height(60.dp).width(60.dp).padding(end = 10.dp).clip(
                         RoundedCornerShape(10.dp)
                     ),
                     contentScale = ContentScale.FillBounds
