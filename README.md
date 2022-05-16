@@ -5,10 +5,10 @@ An app that allows you snap a photo OR choose a photo from your gallery and it t
 This app uses Google ML Kit to perform the image analysis - [ML KIT](https://developers.google.com/ml-kit/vision/image-labeling)
 
 ## Demo APK
+[Download APK Here](https://drive.google.com/file/d/1cCWSiIovj0KzRCdbu6x3tQbf0aSAKM80/view?usp=sharing)
 
 
-
-## Demo
+## Demo Video
 
 
 
