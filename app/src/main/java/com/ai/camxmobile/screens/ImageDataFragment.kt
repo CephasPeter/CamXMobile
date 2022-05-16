@@ -75,7 +75,7 @@ class ImageDataFragment : Fragment() {
                     }
                 }
 
-                val itemModel = ItemModel(UUID.randomUUID().toString()).apply {
+                val itemModel = ItemModel(camViewModel.capturedName.value.toString()).apply {
                     createdDate = System.currentTimeMillis()
                     imageLabel = labelList
                     uri = camViewModel.capturedUri.value.toString()

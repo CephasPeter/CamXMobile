@@ -34,6 +34,10 @@ import com.ai.camxmobile.models.ItemModel
 import com.ai.camxmobile.viewmodels.CameraViewModel
 import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.FileDescriptor
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,6 +48,8 @@ import kotlin.collections.ArrayList
 class ImageHistoryFragment : Fragment() {
     private lateinit var binding: FragmentImageHistoryBinding
     private val camViewModel: CameraViewModel by activityViewModels()
+    private val mainScope = CoroutineScope(Dispatchers.Main + Job())
+    private val ioScope = CoroutineScope(Dispatchers.IO + Job())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentImageHistoryBinding.inflate(inflater,container,false)
@@ -59,11 +65,15 @@ class ImageHistoryFragment : Fragment() {
 
         camViewModel.itemList.observe(requireActivity()) {
             if(it.isNotEmpty()){
-                labelList.clear()
-                labelList.addAll(it)
-                binding.composeView.setContent {
-                    MdcTheme {
-                        Body()
+                ioScope.launch {
+                    labelList.clear()
+                    labelList.addAll(it)
+                    mainScope.launch {
+                        binding.composeView.setContent {
+                            MdcTheme {
+                                Body()
+                            }
+                        }
                     }
                 }
             }
