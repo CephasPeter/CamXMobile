@@ -58,21 +58,15 @@ class CameraFragment : Fragment() {
     private lateinit var binding: FragmentCameraBinding
 
     private var imageCapture: ImageCapture? = null
-
-    private var videoCapture: VideoCapture<Recorder>? = null
-    private var recording: Recording? = null
-
     private lateinit var cameraExecutor: ExecutorService
 
     private val camViewModel: CameraViewModel by activityViewModels()
 
     private val mainScope = CoroutineScope(Dispatchers.Main + Job())
-    private val ioScope = CoroutineScope(Dispatchers.IO + Job())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCameraBinding.inflate(inflater,container,false)
 
-        //val usageStatsManager = requireActivity().getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         if (allPermissionsGranted()) {
             startCamera()
         } else {
@@ -253,7 +247,7 @@ class CameraFragment : Fragment() {
                 camera = cameraProvider.bindToLifecycle(this, lensFacing, preview, imageCapture, imageAnalyzer)
                 cameraInfo = camera.cameraInfo
             } catch(exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
+                exc.printStackTrace()
             }
 
             camViewModel.lensFacing.observe(requireActivity()) {
@@ -263,8 +257,7 @@ class CameraFragment : Fragment() {
                     camera = cameraProvider.bindToLifecycle(this, it!!, preview, imageCapture, imageAnalyzer)
                     cameraInfo = camera!!.cameraInfo
                 } catch(exc: Exception) {
-                    Log.e(TAG, "Use case binding failed", exc)
-                }
+                    exc.printStackTrace()                }
             }
 
             camViewModel.flashEnabled.observe(requireActivity()){
@@ -327,13 +320,10 @@ class CameraFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "CamX AI"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS =
             mutableListOf (
                 Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO
             ).apply {
                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -358,57 +348,6 @@ class CameraFragment : Fragment() {
             listener(luma)
 
             image.close()
-        }
-    }
-
-    private fun runObjectDetection(bitmap: Bitmap) {
-        val image = InputImage.fromBitmap(bitmap, 0)
-
-        val options = ObjectDetectorOptions.Builder()
-            .setDetectorMode(ObjectDetectorOptions.SINGLE_IMAGE_MODE)
-            .enableMultipleObjects()
-            .enableClassification()
-            .build()
-
-        val objectDetector = ObjectDetection.getClient(options)
-        objectDetector.process(image)
-            .addOnSuccessListener {
-                // Task completed successfully
-                if(it.isNotEmpty()){
-                    debugPrint(it)
-                }
-            }
-            .addOnFailureListener {
-                // Task failed with an exception
-                Log.e(TAG, it.message.toString())
-            }
-    }
-
-    private fun runLabelDetection(bitmap: Bitmap) {
-        val image = InputImage.fromBitmap(bitmap, 0)
-        val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
-        labeler.process(image)
-            .addOnSuccessListener { labels ->
-                labels.forEachIndexed { index, imageLabel ->
-
-                }
-            }
-            .addOnFailureListener { e ->
-
-            }
-    }
-
-    private fun debugPrint(detectedObjects: List<DetectedObject>) {
-        detectedObjects.forEachIndexed { index, detectedObject ->
-            val box = detectedObject.boundingBox
-
-            Log.d(TAG, "Detected object: $index")
-            Log.d(TAG, " trackingId: ${detectedObject.trackingId}")
-            Log.d(TAG, " boundingBox: (${box.left}, ${box.top}) - (${box.right},${box.bottom})")
-            detectedObject.labels.forEach {
-                Log.d(TAG, " categories: ${it.text}")
-                Log.d(TAG, " confidence: ${it.confidence}")
-            }
         }
     }
 
