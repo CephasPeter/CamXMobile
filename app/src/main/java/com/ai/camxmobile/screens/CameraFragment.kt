@@ -12,7 +12,6 @@ import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
 import android.provider.OpenableColumns
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ScaleGestureDetector
 import android.view.View
@@ -21,9 +20,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.Recorder
-import androidx.camera.video.Recording
-import androidx.camera.video.VideoCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -32,18 +28,14 @@ import androidx.navigation.fragment.findNavController
 import com.ai.camxmobile.R
 import com.ai.camxmobile.databinding.FragmentCameraBinding
 import com.ai.camxmobile.viewmodels.CameraViewModel
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.label.ImageLabeling
-import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
-import com.google.mlkit.vision.objects.DetectedObject
-import com.google.mlkit.vision.objects.ObjectDetection
-import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -54,7 +46,7 @@ class CameraFragment : Fragment() {
     private lateinit var binding: FragmentCameraBinding
 
     private var imageCapture: ImageCapture? = null
-    private lateinit var cameraExecutor: ExecutorService
+    private var cameraExecutor: ExecutorService? = null
 
     private val camViewModel: CameraViewModel by activityViewModels()
 
@@ -64,10 +56,10 @@ class CameraFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCameraBinding.inflate(inflater,container,false)
 
-        if (allPermissionsGranted()) {
+        if (requireActivity().checkCallingOrSelfPermission(Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED) {
             startCamera()
         } else {
-            ActivityCompat.requestPermissions(requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+            permReqLauncher.launch(Manifest.permission.CAMERA)
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -141,6 +133,14 @@ class CameraFragment : Fragment() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    private val permReqLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
+        if (it) {
+            startCamera()
+        } else {
+            Toast.makeText(requireContext(), "Permissions not granted by the user.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -226,11 +226,10 @@ class CameraFragment : Fragment() {
             val imageAnalyzer = ImageAnalysis.Builder()
                 .build()
                 .also {
-                    it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
+                    it.setAnalyzer(cameraExecutor!!, LuminosityAnalyzer { luma ->
                         mainScope.launch {
                             binding.light.text = luma.toInt().toString()
                         }
-                        //Log.d(TAG, "Average luminosity: $luma")
                     })
                 }
 
@@ -297,35 +296,9 @@ class CameraFragment : Fragment() {
         }, ContextCompat.getMainExecutor(requireActivity()))
     }
 
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(requireActivity().baseContext, it) == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                startCamera()
-            } else {
-                Toast.makeText(requireContext(), "Permissions not granted by the user.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        cameraExecutor.shutdown()
-    }
-
-    companion object {
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS =
-            mutableListOf (
-                Manifest.permission.CAMERA,
-            ).apply {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
-            }.toTypedArray()
+        cameraExecutor?.shutdown()
     }
 
     private class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {
@@ -353,9 +326,9 @@ class CameraFragment : Fragment() {
         var result: String? = null
         if (uri.scheme == "content") {
             val cursor: Cursor? = requireActivity().contentResolver.query(uri, null, null, null, null)
-            cursor.use { cursor ->
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            cursor.use {
+                if (it != null && it.moveToFirst()) {
+                    result = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 }
             }
         }
