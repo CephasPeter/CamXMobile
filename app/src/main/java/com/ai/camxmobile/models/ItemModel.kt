@@ -16,5 +16,5 @@ data class ItemModel(
     var createdDate: Long? = null
 
     @TypeConverters(ImageLabelConverter::class)
-    var imageLabel: ImageLabel? = null
+    var imageLabel: ArrayList<ImageLabel>? = ArrayList()
 }

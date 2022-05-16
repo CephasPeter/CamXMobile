@@ -4,22 +4,17 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.mlkit.vision.label.ImageLabel
 import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class ImageLabelConverter {
-    var gson = Gson()
-
+    @OptIn(ExperimentalSerializationApi::class)
     @TypeConverter
-    fun storedStringToDataList(value: String?): ImageLabel? {
-        if (value == null) {
-            return null
-        }
-        val listType = object : TypeToken<ImageLabel?>() {}.type
-        return gson.fromJson(value, listType)
-    }
+    fun fromList(value : ArrayList<ImageLabel>) = Json.encodeToString(value)
 
+    @OptIn(ExperimentalSerializationApi::class)
     @TypeConverter
-    fun dataStringToStoredString(data: ImageLabel?): String {
-        return gson.toJson(data)
-    }
-
+    fun toList(value: String) = Json.decodeFromString<ArrayList<ImageLabel>>(value)
 }
