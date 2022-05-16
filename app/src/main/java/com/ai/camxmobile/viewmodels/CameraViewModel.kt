@@ -1,12 +1,20 @@
 package com.ai.camxmobile.viewmodels
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.camera.core.CameraSelector
+import androidx.collection.ArrayMap
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ai.camxmobile.database.dao.ItemDetailRepo
+import com.ai.camxmobile.models.ItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,4 +24,33 @@ class CameraViewModel @Inject constructor(private val itemDetailRepo: ItemDetail
 
     var capturedBitmap = MutableLiveData<Bitmap>()
     var capturedUri = MutableLiveData<Uri>()
+
+    private val _id = MutableLiveData<Long>()
+    val id : LiveData<Long> =  _id
+    fun insertRoomData(itemModel: ItemModel){
+        viewModelScope.launch(Dispatchers.IO) {
+            _id.postValue(itemDetailRepo.createItemModel(itemModel))
+        }
+    }
+
+    var itemList = MutableLiveData<ArrayList<ItemModel>>()
+    fun getAllStoredData(){
+        viewModelScope.launch(Dispatchers.IO) {
+            itemDetailRepo.getAllItemModel
+                .catch { e->
+                    e.printStackTrace()
+                }
+                .collect { list ->
+                    val innerList = ArrayList<ItemModel>()
+                    innerList.addAll(list)
+                    itemList.postValue(innerList)
+                }
+        }
+    }
+
+    fun deleteRoomData(itemModel: ItemModel){
+        viewModelScope.launch(Dispatchers.IO) {
+            itemDetailRepo.deleteItemModel(itemModel)
+        }
+    }
 }

@@ -32,9 +32,11 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabel
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class ImageDataFragment : Fragment() {
     private lateinit var binding: FragmentImageDataBinding
     private val camViewModel: CameraViewModel by activityViewModels()
