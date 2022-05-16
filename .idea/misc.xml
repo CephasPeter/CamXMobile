@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable-night/circular_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/circular_background.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/circular_foreground.xml" value="0.234" />
         <entry key="app/src/main/res/drawable/ic_round_camera_24.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_camera.xml" value="0.22533111572265624" />

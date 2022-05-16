@@ -39,17 +39,13 @@ import com.google.mlkit.vision.objects.DetectedObject
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
 
 typealias LumaListener = (luma: Double) -> Unit
 
@@ -63,6 +59,7 @@ class CameraFragment : Fragment() {
     private val camViewModel: CameraViewModel by activityViewModels()
 
     private val mainScope = CoroutineScope(Dispatchers.Main + Job())
+    private val ioScope = CoroutineScope(Dispatchers.IO + Job())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCameraBinding.inflate(inflater,container,false)

@@ -215,10 +215,27 @@
         app:layout_constraintBottom_toBottomOf="@id/shutterBackground"
         app:layout_constraintTop_toTopOf="@id/shutterBackground"
         app:srcCompat="@drawable/circular_foreground"
-        app:tint="?colorPrimary"
+        android:tint="?colorPrimary"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/view_saved_files"
         app:shapeAppearanceOverlay="@style/circleImageView"
+        />
+
+    <ImageView
+        android:id="@+id/gallery"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintEnd_toEndOf="@id/viewSaved"
+        app:layout_constraintStart_toStartOf="@id/viewSaved"
+        app:layout_constraintBottom_toBottomOf="@id/viewSaved"
+        app:layout_constraintTop_toTopOf="@id/viewSaved"
+        android:src="@drawable/ic_round_browse_gallery_24"
+        android:scaleX=".9"
+        android:scaleY=".9"
+        android:elevation="1dp"
+        app:tint="?colorOnPrimary"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/view_saved_files"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,12 +11,8 @@ interface ItemDetailDao {
     fun getAll(): Flow<List<ItemModel>>
 
     @Transaction
-    @Query("SELECT * FROM ItemModel WHERE id LIKE :itemID LIMIT 1")
-    fun getWithIds(itemID : String): Flow<ItemModel>
-
-    @Transaction
-    @Query("SELECT * FROM ItemModel WHERE id LIKE :itemID LIMIT 1")
-    fun getWithIdsWithoutFlow(itemID : String): ItemModel
+    @Query("SELECT * FROM ItemModel LIMIT 1")
+    fun getOneItem(): ItemModel
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(app: ItemModel) : Long

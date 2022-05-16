@@ -15,13 +15,7 @@ class ItemDetailRepo @Inject constructor(private val dataDao: ItemDetailDao)  {
 
     val getAllItemModel: Flow<List<ItemModel>> get() =  dataDao.getAll()
 
-    suspend fun getItemModelWithoutFlow(id:String) : ItemModel {
-        return dataDao.getWithIdsWithoutFlow(id)
-    }
-
-    suspend fun getItemModel(id:String) : Flow<ItemModel> {
-        return dataDao.getWithIds(id)
-    }
+    val getOneItem: ItemModel get() =  dataDao.getOneItem()
 
     suspend fun deleteItemModel(data : ItemModel) {
         dataDao.delete(data)

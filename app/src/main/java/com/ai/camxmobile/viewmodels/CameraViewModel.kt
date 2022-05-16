@@ -51,6 +51,18 @@ class CameraViewModel @Inject constructor(private val itemDetailRepo: ItemDetail
         }
     }
 
+    fun getOneStoredData() : ItemModel?{
+        var itemModel : ItemModel? = null
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                itemModel = itemDetailRepo.getOneItem
+            }catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+        return itemModel
+    }
+
     fun deleteRoomData(itemModel: ItemModel){
         viewModelScope.launch(Dispatchers.IO) {
             itemDetailRepo.deleteItemModel(itemModel)
