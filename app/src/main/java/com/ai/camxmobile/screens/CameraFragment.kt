@@ -43,8 +43,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import java.nio.ByteBuffer
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -111,6 +112,11 @@ class CameraFragment : Fragment() {
             selectImageFromGalleryResult.launch("image/*")
         }
 
+        binding.viewSaved.setOnClickListener {
+            val action = CameraFragmentDirections.actionCameraFragmentToImageHistoryFragment()
+            findNavController().navigate(action)
+        }
+
         return binding.root
     }
 
@@ -123,11 +129,27 @@ class CameraFragment : Fragment() {
             } else {
                 MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
             }
+            val fileName = getFileName(imageUri).toString()
 
-            camViewModel.capturedBitmap.value = bitmap
+            val storagePath = File(requireContext().filesDir.path + "/Images/")
+            storagePath.mkdirs()
+            val myImage = File(storagePath, fileName)
 
-            val action = CameraFragmentDirections.actionCameraFragmentToImageDataFragment()
-            findNavController().navigate(action)
+            try {
+                val out = FileOutputStream(myImage)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+                out.flush()
+                out.close()
+
+                camViewModel.capturedBitmap.value = bitmap
+                camViewModel.capturedUri.value = Uri.fromFile(myImage)
+                camViewModel.capturedName.value = fileName
+
+                val action = CameraFragmentDirections.actionCameraFragmentToImageDataFragment()
+                findNavController().navigate(action)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -165,12 +187,26 @@ class CameraFragment : Fragment() {
                         MediaStore.Images.Media.getBitmap(requireContext().contentResolver, imageUri)
                     }
 
-                    camViewModel.capturedBitmap.value = bitmap
-                    camViewModel.capturedUri.value = imageUri
-                    camViewModel.capturedName.value = getFileName(imageUri)
+                    val fileName = getFileName(imageUri).toString()
+                    val storagePath = File(requireContext().filesDir.path + "/Images/")
+                    storagePath.mkdirs()
+                    val myImage = File(storagePath, fileName)
 
-                    val action = CameraFragmentDirections.actionCameraFragmentToImageDataFragment()
-                    findNavController().navigate(action)
+                    try {
+                        val out = FileOutputStream(myImage)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+                        out.flush()
+                        out.close()
+
+                        camViewModel.capturedBitmap.value = bitmap
+                        camViewModel.capturedUri.value = Uri.fromFile(myImage)
+                        camViewModel.capturedName.value = fileName
+
+                        val action = CameraFragmentDirections.actionCameraFragmentToImageDataFragment()
+                        findNavController().navigate(action)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
         })

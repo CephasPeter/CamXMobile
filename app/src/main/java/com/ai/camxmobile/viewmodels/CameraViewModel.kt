@@ -42,6 +42,8 @@ class CameraViewModel @Inject constructor(private val itemDetailRepo: ItemDetail
                     e.printStackTrace()
                 }
                 .collect { list ->
+                    itemList.value?.clear()
+
                     val innerList = ArrayList<ItemModel>()
                     innerList.addAll(list)
                     itemList.postValue(innerList)
