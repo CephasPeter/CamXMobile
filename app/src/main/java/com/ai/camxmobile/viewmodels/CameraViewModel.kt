@@ -5,8 +5,12 @@ import android.net.Uri
 import androidx.camera.core.CameraSelector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ai.camxmobile.database.dao.ItemDetailRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class CameraViewModel : ViewModel(){
+@HiltViewModel
+class CameraViewModel @Inject constructor(private val itemDetailRepo: ItemDetailRepo): ViewModel(){
     var lensFacing = MutableLiveData<CameraSelector?>()
     var flashEnabled = MutableLiveData<Boolean?>()
 
