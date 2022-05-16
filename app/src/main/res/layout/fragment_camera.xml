@@ -141,8 +141,6 @@
             />
     </LinearLayout>
 
-
-
     <LinearLayout
         android:id="@+id/choose_picture"
         android:layout_width="wrap_content"
