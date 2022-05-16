@@ -68,6 +68,10 @@ class ImageDataFragment : Fragment() {
         val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
         labeler.process(image)
             .addOnSuccessListener { labels ->
+                binding.loading.visibility = View.GONE
+                if (labels.isEmpty()){
+                    binding.emptyText.visibility = View.VISIBLE
+                }
                 labelList.addAll(labels)
                 binding.composeView.setContent {
                     MdcTheme {

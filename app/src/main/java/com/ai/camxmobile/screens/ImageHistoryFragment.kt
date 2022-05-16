@@ -47,7 +47,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 @AndroidEntryPoint
 class ImageHistoryFragment : Fragment() {
     private lateinit var binding: FragmentImageHistoryBinding
@@ -85,6 +84,7 @@ class ImageHistoryFragment : Fragment() {
                                 bitmapMap[item.id] = bitmap
                             }
                             mainScope.launch {
+                                binding.loading.visibility = View.GONE
                                 binding.composeView.setContent {
                                     MdcTheme {
                                         Body()
@@ -92,13 +92,17 @@ class ImageHistoryFragment : Fragment() {
                                 }
                             }
                         }
+                    }else{
+                        binding.emptyText.visibility = View.VISIBLE
                     }
                     camViewModel.itemList.removeObserver(this)
                 }
             }
 
             camViewModel.itemList.observe(requireActivity(),observer)
-            camViewModel.getAllStoredData()
+            if(camViewModel.itemList.value == null){
+                camViewModel.getAllStoredData()
+            }
         }else{
             binding.composeView.setContent {
                 MdcTheme {
